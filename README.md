@@ -41,6 +41,14 @@ These labs were developed and tested during exam preparation, primarily on an **
 - [NCA-AIIO Exam Page](https://www.nvidia.com/en-us/learn/certification/ai-infrastructure-operations-associate/)
 - [NVIDIA Deep Learning Institute](https://www.nvidia.com/en-us/training/)
 
+## Completed Labs
+
+### Lab 02 — DCGM Container & Metrics
+
+Deployed the DCGM host engine as a Docker container on **Windows + Docker Desktop (WSL2)**, used `dcgmi` to discover an RTX 4070 GPU, enabled health watches, ran quick diagnostics (level 1), and exposed Prometheus-format GPU telemetry via `dcgm-exporter` on `:9400/metrics`. Documented the known WSL2/consumer-GPU deployment-check quirk and confirmed that GPU discovery + live metrics are the primary validation signals.
+
+---
+
 ## Disclaimer
 
 These labs are for educational and reference purposes. Commands and outputs may vary depending on your GPU model, driver version, and environment. Always verify against official NVIDIA documentation.
