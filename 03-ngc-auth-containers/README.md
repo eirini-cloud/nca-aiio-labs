@@ -1,28 +1,107 @@
-# Lab 03 — NGC Authentication & Pulling Containers
+# Lab 03 — NGC Authentication & Pulling Containers (Windows + Docker Desktop)
 
-Set up the NGC CLI, authenticate, and pull GPU-optimised containers from the NVIDIA GPU Cloud registry.
+Authenticate with the NVIDIA GPU Cloud registry, pull GPU-optimised containers via Docker, and validate GPU access inside the container. Optionally install the NGC CLI.
 
 ## Objectives
 
-- Install and configure the NGC CLI
-- Authenticate with an NGC API key
-- Browse and pull containers from `nvcr.io`
-- Use Docker to pull NGC containers directly
+* Authenticate Docker with `nvcr.io` using a secure login method
+* Pull and run an NGC container with GPU access
+* Validate CUDA + GPU detection inside the container
+* (Optional) Install the NGC CLI and explore registry commands
 
 ## Prerequisites
 
-- Free NGC account at <https://ngc.nvidia.com>
-- Docker with the NVIDIA Container Toolkit
-- Internet access
+* Free NGC account at <https://ngc.nvidia.com>
+* **Docker Desktop running** with **Linux containers** (WSL2 backend)
+* NVIDIA Container Toolkit working (`docker run --gpus all …` functions)
+* Internet access
+
+---
 
 ## 1 — Create an NGC API Key
 
 1. Log in to <https://ngc.nvidia.com>
 2. Click your profile icon (top right) → **Setup**
 3. Click **Generate API Key**
-4. Copy and save the key — you'll need it for CLI and Docker auth
+4. Copy and save the key — you'll need it for Docker auth and optional CLI config
 
-## 2 — Install the NGC CLI
+---
+
+## 2 — Set API Key & Docker Login (secure)
+
+PowerShell:
+
+```powershell
+$env:NGC_API_KEY = "<PASTE_YOUR_KEY>"
+$env:NGC_API_KEY | docker login nvcr.io -u '$oauthtoken' --password-stdin
+```
+
+**Expected**
+
+* `Login Succeeded`
+
+> Avoid `-p` because it can expose the key in CLI history.
+
+---
+
+## 3 — Pull an NGC Container
+
+PowerShell:
+
+```powershell
+docker pull nvcr.io/nvidia/pytorch:24.01-py3
+```
+
+Verify:
+
+```powershell
+docker images | Select-String "nvcr.io/nvidia/pytorch"
+```
+
+**Expected**
+
+* `Status: Image is up to date…` (or download progress on first pull)
+* Image appears in `docker images` output
+
+---
+
+## 4 — Run Container + GPU Proof
+
+PowerShell (single line):
+
+```powershell
+docker run --gpus all --rm nvcr.io/nvidia/pytorch:24.01-py3 python3 -c "import torch; print('cuda', torch.cuda.is_available()); print('gpu', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'none')"
+```
+
+**Expected output:**
+
+```
+cuda True
+gpu NVIDIA GeForce RTX 4070
+```
+
+### Performance run (optional — avoids SHMEM warnings)
+
+```powershell
+docker run --gpus all --rm --ipc=host --ulimit memlock=-1 --ulimit stack=67108864 nvcr.io/nvidia/pytorch:24.01-py3 python3 -c "import torch; print(torch.cuda.get_device_name(0))"
+```
+
+---
+
+## 5 — NGC CLI (Optional)
+
+### Windows
+
+Install NGC CLI for Windows from the [NGC CLI download page](https://ngc.nvidia.com/setup/installers/cli) (or use WSL for the Linux instructions below).
+
+Verify:
+
+```powershell
+ngc --version
+ngc --help
+```
+
+### Linux/WSL
 
 ```bash
 # Download the NGC CLI (AMD64 Linux)
@@ -42,7 +121,7 @@ ngc --version
 rm -rf ngccli.zip ngc-cli
 ```
 
-## 3 — Configure NGC CLI
+### Configure NGC CLI
 
 ```bash
 # Interactive configuration — enter your API key when prompted
@@ -55,96 +134,43 @@ ngc config set
 #   team:            <your team, or leave blank>
 ```
 
-Alternatively, set via environment variable:
+---
+
+## 6 — Browse the NGC Registry (CLI)
+
+Check available commands:
 
 ```bash
-export NGC_API_KEY="your-api-key-here"
+ngc registry --help
 ```
 
-## 4 — Browse the NGC Catalog
+After running `ngc config set`:
 
 ```bash
-# List available container collections
+# List available container images
 ngc registry image list
 
 # Search for specific containers
 ngc registry image list --format_type csv | grep -i pytorch
 ngc registry image list --format_type csv | grep -i triton
-ngc registry image list --format_type csv | grep -i tensorflow
 
 # Get details on a specific image
 ngc registry image info nvidia/pytorch:24.01-py3
 ```
 
-## 5 — Pull Containers via NGC CLI
+> **Optional:** Use `ngc registry image pull nvcr.io/nvidia/pytorch:24.01-py3` after running `ngc config set`. In practice, most workflows use `docker pull` directly.
 
-```bash
-# Pull a container using the NGC CLI
-ngc registry image pull nvcr.io/nvidia/pytorch:24.01-py3
-```
+---
 
-## 6 — Pull Containers via Docker
-
-The more common approach is to use Docker directly with NGC registry credentials.
-
-```bash
-# Log in to the NGC container registry
-# Username is always "$oauthtoken", password is your NGC API key
-docker login nvcr.io -u '$oauthtoken' -p "$NGC_API_KEY"
-
-# Pull containers
-docker pull nvcr.io/nvidia/pytorch:24.01-py3
-docker pull nvcr.io/nvidia/tritonserver:24.01-py3
-docker pull nvcr.io/nvidia/tensorflow:24.01-tf2-py3
-docker pull nvcr.io/nvidia/cloud-native/dcgm:3.3.5-1-ubuntu22.04
-
-# Verify pulled images
-docker images | grep nvcr.io
-```
-
-## 7 — Run an NGC Container
-
-```bash
-# Run PyTorch container with GPU access
-docker run --gpus all -it --rm \
-  nvcr.io/nvidia/pytorch:24.01-py3 \
-  python3 -c "import torch; print(f'PyTorch {torch.__version__}, CUDA available: {torch.cuda.is_available()}, GPU: {torch.cuda.get_device_name(0)}')"
-
-# Run TensorFlow container with GPU access
-docker run --gpus all -it --rm \
-  nvcr.io/nvidia/tensorflow:24.01-tf2-py3 \
-  python3 -c "import tensorflow as tf; print(f'TensorFlow {tf.__version__}'); print(tf.config.list_physical_devices('GPU'))"
-```
-
-## 8 — NGC Container Environment Variables
+## 7 — NGC Container Environment Variables
 
 NGC containers come with useful pre-set environment variables:
 
-```bash
-docker run --gpus all -it --rm nvcr.io/nvidia/pytorch:24.01-py3 bash -c '
-echo "NVIDIA_VISIBLE_DEVICES=$NVIDIA_VISIBLE_DEVICES"
-echo "CUDA_VERSION=$CUDA_VERSION"
-echo "NVIDIA_DRIVER_CAPABILITIES=$NVIDIA_DRIVER_CAPABILITIES"
-echo "NVIDIA_PRODUCT_NAME=$NVIDIA_PRODUCT_NAME"
-echo "NVIDIA_PYTORCH_VERSION=$NVIDIA_PYTORCH_VERSION"
-echo "TORCH_CUDA_ARCH_LIST=$TORCH_CUDA_ARCH_LIST"
-'
+```powershell
+docker run --gpus all --rm nvcr.io/nvidia/pytorch:24.01-py3 bash -c "echo NVIDIA_VISIBLE_DEVICES=$NVIDIA_VISIBLE_DEVICES; echo CUDA_VERSION=$CUDA_VERSION; echo NVIDIA_DRIVER_CAPABILITIES=$NVIDIA_DRIVER_CAPABILITIES; echo NVIDIA_PRODUCT_NAME=$NVIDIA_PRODUCT_NAME; echo NVIDIA_PYTORCH_VERSION=$NVIDIA_PYTORCH_VERSION"
 ```
 
-## 9 — Pulling Models from NGC
-
-NGC also hosts pre-trained models:
-
-```bash
-# List model collections
-ngc registry model list
-
-# Search for models
-ngc registry model list --format_type csv | grep -i bert
-
-# Download a model
-ngc registry model download-version nvidia/nemo/megatron_gpt_345m:1
-```
+---
 
 ## Key Concepts
 
@@ -157,14 +183,29 @@ ngc registry model download-version nvidia/nemo/megatron_gpt_345m:1
 | Free tier | Most NVIDIA containers are freely accessible with an NGC account |
 | Container optimisation | NGC containers are optimised for NVIDIA GPUs with pre-tuned libraries (cuDNN, NCCL, TensorRT) |
 
+---
+
+## Evidence (add screenshots here)
+
+Add to `03-ngc-auth-containers/evidence/`:
+
+* **`evidence/ngc-auth-help.png`**
+  * Shows `docker login … --password-stdin` → `Login Succeeded`
+  * Shows `ngc --help` (CLI installed and command groups available)
+
+* **`evidence/ngc-pull-run-gpu-proof.png`**
+  * Shows `docker pull` success
+  * Shows container run with `cuda True` and `RTX 4070` detected
+
+---
+
 ## Cleanup
 
-```bash
-# Remove pulled images (optional)
-docker rmi nvcr.io/nvidia/pytorch:24.01-py3
-docker rmi nvcr.io/nvidia/tritonserver:24.01-py3
-docker rmi nvcr.io/nvidia/tensorflow:24.01-tf2-py3
+PowerShell:
 
-# Remove NGC CLI config
-rm -rf ~/.ngc
+```powershell
+docker rmi nvcr.io/nvidia/pytorch:24.01-py3 2>$null
+
+# Remove NGC CLI config (optional)
+Remove-Item -Recurse -Force ~\.ngc 2>$null
 ```
