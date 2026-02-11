@@ -11,6 +11,9 @@ GPU inspection, monitoring, and process management using `nvidia-smi`.
 
 ## Evidence (Windows Host — GPU Ready)
 
+<img width="1255" height="911" alt="image" src="https://github.com/user-attachments/assets/f0ed10a2-dea5-44a7-915b-b50513eba0aa" />
+
+
 Ran `nvidia-smi` on **Wed Feb 11 2026** to confirm the driver stack is functioning:
 
 | Item | Value |
