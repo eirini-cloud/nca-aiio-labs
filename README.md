@@ -38,7 +38,7 @@ These labs were developed and tested during exam preparation, primarily on an **
 
 ## Exam Resources
 
-- [NCA-AIIO Exam Page](https://www.nvidia.com/en-us/training/certification/)
+- [NCA-AIIO Exam Page](https://www.nvidia.com/en-us/learn/certification/ai-infrastructure-operations-associate/)
 - [NVIDIA Deep Learning Institute](https://www.nvidia.com/en-us/training/)
 
 ## Disclaimer
