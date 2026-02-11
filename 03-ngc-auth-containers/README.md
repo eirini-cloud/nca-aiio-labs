@@ -11,7 +11,16 @@ Authenticate with the NVIDIA GPU Cloud registry, pull GPU-optimised containers v
 
 <img width="962" height="547" alt="ngc-auth-help" src="https://github.com/user-attachments/assets/f45f7bf2-ffd9-446c-94cc-f4b8a5d45fa5" />
 
+--
+
 <img width="960" height="786" alt="ngc-pull-run-gpu-proof" src="https://github.com/user-attachments/assets/6c51a75f-33f8-4848-9a12-a5fb41ca1abc" />
+
+--
+Optional
+
+<img width="918" height="499" alt="NGC_registry" src="https://github.com/user-attachments/assets/59f7e952-871a-4220-94a1-dc7401ac42ba" />
+
+
 
 ## Prerequisites
 
