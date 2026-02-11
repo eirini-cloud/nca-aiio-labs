@@ -9,6 +9,33 @@ GPU inspection, monitoring, and process management using `nvidia-smi`.
 - Understand output formats (human-readable, CSV, XML)
 - Manage GPU compute modes and persistence mode
 
+## Evidence (Windows Host — GPU Ready)
+
+Ran `nvidia-smi` on **Wed Feb 11 2026** to confirm the driver stack is functioning:
+
+| Item | Value |
+|------|-------|
+| GPU detected | NVIDIA GeForce RTX 4070 |
+| Driver | 572.16 |
+| CUDA runtime (reported by driver) | 12.8 |
+| Display mode | WDDM (Windows Display Driver Model) |
+| VRAM at capture | ~1330 MiB / 12282 MiB in use |
+| GPU utilisation at capture | ~6 % |
+| Process evidence | Windows desktop apps (e.g. Chrome) visible in the `nvidia-smi` process list — confirms the OS + driver stack is functioning end-to-end |
+| Monitoring proof | Continuous `dmon`-style sample view captured (P-states, clocks, power, memory) |
+
+## Validation Commands
+
+Copy-paste to reproduce:
+
+```bash
+nvidia-smi
+nvidia-smi -L
+nvidia-smi dmon -s pucm          # optional — continuous monitoring
+```
+
+> **WDDM note:** On Windows (WDDM), `nvidia-smi` will show desktop and video-decode workloads (Chrome, etc.) under the process list. For compute and container labs, ensure Docker / WSL2 is configured to use the NVIDIA runtime.
+
 ## Prerequisites
 
 - NVIDIA GPU with driver 535+
