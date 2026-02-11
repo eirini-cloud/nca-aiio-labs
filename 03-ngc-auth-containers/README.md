@@ -9,6 +9,10 @@ Authenticate with the NVIDIA GPU Cloud registry, pull GPU-optimised containers v
 * Validate CUDA + GPU detection inside the container
 * (Optional) Install the NGC CLI and explore registry commands
 
+<img width="962" height="547" alt="ngc-auth-help" src="https://github.com/user-attachments/assets/f45f7bf2-ffd9-446c-94cc-f4b8a5d45fa5" />
+
+<img width="960" height="786" alt="ngc-pull-run-gpu-proof" src="https://github.com/user-attachments/assets/6c51a75f-33f8-4848-9a12-a5fb41ca1abc" />
+
 ## Prerequisites
 
 * Free NGC account at <https://ngc.nvidia.com>
@@ -182,22 +186,6 @@ docker run --gpus all --rm nvcr.io/nvidia/pytorch:24.01-py3 bash -c "echo NVIDIA
 | Naming convention | `nvcr.io/<org>/<container>:<tag>` |
 | Free tier | Most NVIDIA containers are freely accessible with an NGC account |
 | Container optimisation | NGC containers are optimised for NVIDIA GPUs with pre-tuned libraries (cuDNN, NCCL, TensorRT) |
-
----
-
-## Evidence (add screenshots here)
-
-<img width="962" height="547" alt="ngc-auth-help" src="https://github.com/user-attachments/assets/f45f7bf2-ffd9-446c-94cc-f4b8a5d45fa5" />
-
-
-
-  * Shows `docker login … --password-stdin` → `Login Succeeded`
-  * Shows `ngc --help` (CLI installed and command groups available)
-
-<img width="960" height="786" alt="ngc-pull-run-gpu-proof" src="https://github.com/user-attachments/assets/6c51a75f-33f8-4848-9a12-a5fb41ca1abc" />
-
-  * Shows `docker pull` success
-  * Shows container run with `cuda True` and `RTX 4070` detected
 
 ---
 
