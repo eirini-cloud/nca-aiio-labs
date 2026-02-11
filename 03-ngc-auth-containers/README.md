@@ -1,4 +1,4 @@
-# Lab 03 — NGC Authentication & Pulling Containers (Windows + Docker Desktop)
+# Lab 03 - NGC Authentication & Pulling Containers (Windows + Docker Desktop)
 
 Authenticate with the NVIDIA GPU Cloud registry, pull GPU-optimised containers via Docker, and validate GPU access inside the container. Optionally install the NGC CLI.
 
@@ -18,7 +18,7 @@ Authenticate with the NVIDIA GPU Cloud registry, pull GPU-optimised containers v
 
 ---
 
-## 1 — Create an NGC API Key
+## 1 - Create an NGC API Key
 
 1. Log in to <https://ngc.nvidia.com>
 2. Click your profile icon (top right) → **Setup**
@@ -27,7 +27,7 @@ Authenticate with the NVIDIA GPU Cloud registry, pull GPU-optimised containers v
 
 ---
 
-## 2 — Set API Key & Docker Login (secure)
+## 2 - Set API Key & Docker Login (secure)
 
 PowerShell:
 
@@ -44,7 +44,7 @@ $env:NGC_API_KEY | docker login nvcr.io -u '$oauthtoken' --password-stdin
 
 ---
 
-## 3 — Pull an NGC Container
+## 3 - Pull an NGC Container
 
 PowerShell:
 
@@ -65,7 +65,7 @@ docker images | Select-String "nvcr.io/nvidia/pytorch"
 
 ---
 
-## 4 — Run Container + GPU Proof
+## 4 - Run Container + GPU Proof
 
 PowerShell (single line):
 
@@ -88,7 +88,7 @@ docker run --gpus all --rm --ipc=host --ulimit memlock=-1 --ulimit stack=6710886
 
 ---
 
-## 5 — NGC CLI (Optional)
+## 5 - NGC CLI (Optional)
 
 ### Windows
 
@@ -136,7 +136,7 @@ ngc config set
 
 ---
 
-## 6 — Browse the NGC Registry (CLI)
+## 6 - Browse the NGC Registry (CLI)
 
 Check available commands:
 
@@ -162,7 +162,7 @@ ngc registry image info nvidia/pytorch:24.01-py3
 
 ---
 
-## 7 — NGC Container Environment Variables
+## 7 - NGC Container Environment Variables
 
 NGC containers come with useful pre-set environment variables:
 
@@ -187,13 +187,15 @@ docker run --gpus all --rm nvcr.io/nvidia/pytorch:24.01-py3 bash -c "echo NVIDIA
 
 ## Evidence (add screenshots here)
 
-Add to `03-ngc-auth-containers/evidence/`:
+<img width="962" height="547" alt="ngc-auth-help" src="https://github.com/user-attachments/assets/f45f7bf2-ffd9-446c-94cc-f4b8a5d45fa5" />
 
-* **`evidence/ngc-auth-help.png`**
+
+
   * Shows `docker login … --password-stdin` → `Login Succeeded`
   * Shows `ngc --help` (CLI installed and command groups available)
 
-* **`evidence/ngc-pull-run-gpu-proof.png`**
+<img width="960" height="786" alt="ngc-pull-run-gpu-proof" src="https://github.com/user-attachments/assets/6c51a75f-33f8-4848-9a12-a5fb41ca1abc" />
+
   * Shows `docker pull` success
   * Shows container run with `cuda True` and `RTX 4070` detected
 
