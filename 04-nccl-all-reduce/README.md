@@ -1,4 +1,4 @@
-# Lab 04 — NCCL all_reduce_perf
+# Lab 04 - NCCL all_reduce_perf
 
 Benchmark GPU collective communication using NCCL (NVIDIA Collective Communications Library) `all_reduce_perf` tests.
 
@@ -26,7 +26,7 @@ These are critical for distributed deep learning (gradient synchronisation in da
 - Docker with the NVIDIA Container Toolkit
 - For meaningful multi-GPU tests: 2+ GPUs (single-GPU still works for syntax and baseline)
 
-## 1 — Run the NCCL Tests Container
+## 1 - Run the NCCL Tests Container
 
 The easiest way to run `nccl-tests` is via the PyTorch NGC container (which includes NCCL) or by building from source.
 
@@ -56,7 +56,7 @@ cd nccl-tests
 make MPI=0 CUDA_HOME=/usr/local/cuda NCCL_HOME=/usr
 ```
 
-## 2 — Run all_reduce_perf
+## 2 - Run all_reduce_perf
 
 ```bash
 # Basic all_reduce benchmark
@@ -95,7 +95,7 @@ make MPI=0 CUDA_HOME=/usr/local/cuda NCCL_HOME=/usr
 
 **Bus bandwidth** is the more meaningful metric — it accounts for the communication pattern and tells you how efficiently you're using the interconnect.
 
-## 3 — Vary Parameters
+## 3 - Vary Parameters
 
 ```bash
 # Test with different data types
@@ -118,7 +118,7 @@ make MPI=0 CUDA_HOME=/usr/local/cuda NCCL_HOME=/usr
 # -w: warmup iterations
 ```
 
-## 4 — Multi-GPU Tests
+## 4 - Multi-GPU Tests
 
 ```bash
 # Use all available GPUs (e.g., 2 GPUs)
@@ -147,7 +147,7 @@ CUDA_VISIBLE_DEVICES=0,1 ./build/all_reduce_perf -b 8 -e 128M -f 2 -g 2
 ./build/sendrecv_perf -b 8 -e 128M -f 2 -g 1
 ```
 
-## 6 — NCCL Environment Variables
+## 6 - NCCL Environment Variables
 
 These control NCCL behaviour and are useful for debugging and tuning:
 
@@ -172,7 +172,7 @@ export NCCL_PROTO=Simple         # Simple, LL, LL128
 NCCL_DEBUG=INFO ./build/all_reduce_perf -b 8 -e 128M -f 2 -g 1
 ```
 
-## 7 — Interpreting Results for Single GPU
+## 7 - Interpreting Results for Single GPU
 
 On a single GPU, `all_reduce_perf` is essentially a loopback test. The bandwidth numbers reflect GPU memory bandwidth rather than interconnect bandwidth. This is still useful for:
 - Verifying NCCL is installed and working
