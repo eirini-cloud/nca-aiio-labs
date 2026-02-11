@@ -11,18 +11,26 @@ Benchmark GPU collective communication using NCCL (NVIDIA Collective Communicati
 
 > **Scope note (single GPU):** This lab validates that NCCL and CUDA are working inside an NGC container and provides a baseline. With `-g 1`, there is no GPU-to-GPU communication, so `busbw` is not meaningful (often `0.00`). Correctness is shown by `#wrong = 0`.
 
-<img width="960" height="600" alt="nccl-all-reduce-perf-rtx4070" src="evidence/nccl-all-reduce-perf-rtx4070.png" />
 
 This lab runs `nccl-tests` `all_reduce_perf` inside the NGC PyTorch container to validate NCCL functionality. With `-g 1` (single GPU), the benchmark is a loopback baseline rather than an interconnect test. Correctness is verified by `#wrong = 0`. `algbw` (GB/s) increases with message size as fixed overhead becomes less significant; `busbw` is not meaningful on a single GPU and may show `0.00`.
+
+/
+<img width="1023" height="712" alt="NCCL_all_reduce" src="https://github.com/user-attachments/assets/c68b3a3f-1a02-49c8-8e86-65369cba9bce" />
+
+/
+
+<img width="936" height="326" alt="container-pyto" src="https://github.com/user-attachments/assets/5e89e785-a979-4acd-a44f-f4b16c2b47cb" />
+
+
 
 ## Background
 
 NCCL provides optimised primitives for collective communication across GPUs:
-- **AllReduce** — combine values from all GPUs and distribute result to all
-- **Broadcast** — send data from one GPU to all others
-- **Reduce** — combine values from all GPUs, result on one GPU
-- **AllGather** — gather data from all GPUs to all GPUs
-- **ReduceScatter** — reduce then scatter across GPUs
+- **AllReduce** - combine values from all GPUs and distribute result to all
+- **Broadcast**  -send data from one GPU to all others
+- **Reduce** -combine values from all GPUs, result on one GPU
+- **AllGather** - gather data from all GPUs to all GPUs
+- **ReduceScatter** - reduce then scatter across GPUs
 
 These are critical for distributed deep learning (gradient synchronisation in data-parallel training).
 
@@ -152,7 +160,7 @@ make -j MPI=0
 CUDA_VISIBLE_DEVICES=0,1 ./build/all_reduce_perf -b 8 -e 256M -f 2 -g 2
 ```
 
-## 5 — Other NCCL Collectives
+## 5 - Other NCCL Collectives
 
 ```bash
 # AllGather
@@ -196,7 +204,7 @@ export NCCL_PROTO=Simple         # Simple, LL, LL128
 NCCL_DEBUG=INFO ./build/all_reduce_perf -b 8 -e 256M -f 2 -g 1
 ```
 
-## 7 — Debug Mode (optional)
+## 7 - Debug Mode (optional)
 
 ```bash
 NCCL_DEBUG=INFO ./build/all_reduce_perf -b 8 -e 256M -f 2 -g 1
