@@ -1,4 +1,4 @@
-# Lab 02 — DCGM Container & Metrics (Windows + Docker Desktop)
+# Lab 02 - DCGM Container & Metrics (Windows + Docker Desktop)
 
 Deploy NVIDIA Data Center GPU Manager (DCGM) as a container and validate GPU telemetry/health tooling. Optionally expose metrics in Prometheus format via `dcgm-exporter`.
 
@@ -9,6 +9,10 @@ Deploy NVIDIA Data Center GPU Manager (DCGM) as a container and validate GPU tel
 * (Optional) Expose DCGM metrics in Prometheus format with `dcgm-exporter`
 * Understand the difference between **GPU discovery**, **health watches**, and **diagnostic deployment checks**
 
+<img width="798" height="235" alt="docker-desktop-dcgm-running" src="https://github.com/user-attachments/assets/87229754-5b9e-43cb-a3de-dc30de5b3597" />
+
+<img width="652" height="966" alt="dcgmi-discovery-and-diag" src="https://github.com/user-attachments/assets/49d60f1b-1e20-455c-b378-8f7433c2f4c2" />
+
 ## Prerequisites
 
 * NVIDIA GPU + working driver install (validated via `nvidia-smi` on host)
@@ -18,7 +22,7 @@ Deploy NVIDIA Data Center GPU Manager (DCGM) as a container and validate GPU tel
 
 ---
 
-## 0 — Troubleshooting checkpoint (Docker daemon)
+## 0 - Troubleshooting checkpoint (Docker daemon)
 
 If you see:
 `failed to connect to the docker API at npipe:...dockerDesktopLinuxEngine`
@@ -26,7 +30,7 @@ If you see:
 
 ---
 
-## 1 — Pull DCGM Image
+## 1 - Pull DCGM Image
 
 PowerShell:
 
@@ -36,7 +40,7 @@ docker pull nvcr.io/nvidia/cloud-native/dcgm:3.3.5-1-ubuntu22.04
 
 ---
 
-## 2 — Run DCGM Container (PowerShell)
+## 2 - Run DCGM Container (PowerShell)
 
 PowerShell (single line — PowerShell does **not** use `\` for line continuation):
 
@@ -61,7 +65,7 @@ docker logs dcgm --tail 50
 
 ---
 
-## 3 — Use `dcgmi` inside the container
+## 3 - Use `dcgmi` inside the container
 
 Enter the container:
 
@@ -88,7 +92,7 @@ dcgmi discovery -i 0 -v
 
 ---
 
-## 4 — Health Watches (enable + report)
+## 4 - Health Watches (enable + report)
 
 Health report showing all "Off" usually means watches aren't enabled yet.
 
@@ -109,7 +113,7 @@ dcgmi health -f -g 0
 
 ---
 
-## 5 — Diagnostics (Quick)
+## 5 - Diagnostics (Quick)
 
 Inside container:
 
@@ -131,7 +135,7 @@ This is a common container/WSL2 enumeration quirk. Treat **successful discovery 
 
 ---
 
-## 6 — DCGM Exporter (Prometheus metrics) Optional
+## 6 - DCGM Exporter (Prometheus metrics) Optional
 
 Run exporter on the host (PowerShell):
 
@@ -161,22 +165,6 @@ Filter examples:
 
 ---
 
-## Evidence (add screenshots here)
-
-Add to `02-dcgm-metrics/evidence/`:
-
-* **Docker Desktop container view** showing the `dcgm` container running (your screenshot)
-* Terminal output screenshot showing:
-
-  * `dcgmi discovery -l` (1 GPU found: RTX 4070)
-  * `dcgmi diag -r 1` results (including the known limitation line)
-
-Suggested filenames:
-
-* `evidence/docker-desktop-dcgm-running.png`
-* `evidence/dcgmi-discovery-and-diag.png`
-
----
 
 ## Cleanup
 
