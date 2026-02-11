@@ -1,4 +1,4 @@
-# Lab 01 — nvidia-smi
+# Lab 01 - nvidia-smi
 
 GPU inspection, monitoring, and process management using `nvidia-smi`.
 
@@ -9,7 +9,7 @@ GPU inspection, monitoring, and process management using `nvidia-smi`.
 - Understand output formats (human-readable, CSV, XML)
 - Manage GPU compute modes and persistence mode
 
-## Evidence (Windows Host — GPU Ready)
+## Evidence (Windows Host - GPU Ready)
 
 <img width="1255" height="911" alt="image" src="https://github.com/user-attachments/assets/f0ed10a2-dea5-44a7-915b-b50513eba0aa" />
 
@@ -65,7 +65,7 @@ Example output (RTX Ada Lovelace):
 +-----------------------------------------+------------------------+----------------------+
 ```
 
-## 2 — Querying Specific Fields
+## 2 - Querying Specific Fields
 
 `nvidia-smi` supports `--query-gpu` with a wide range of fields:
 
@@ -80,7 +80,7 @@ nvidia-smi --query-gpu=index,name,driver_version,temperature.gpu,utilization.gpu
 nvidia-smi --query-gpu=index,name,temperature.gpu,utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits
 ```
 
-## 3 — Real-Time Monitoring
+## 3 - Real-Time Monitoring
 
 ```bash
 # Continuous monitoring — refreshes every 1 second (like top for GPUs)
@@ -105,7 +105,7 @@ watch -n 1 nvidia-smi
 | `e` | ECC errors |
 | `t` | Temperature |
 
-## 4 — Process Information
+## 4 - Process Information
 
 ```bash
 # Show all GPU processes
@@ -115,7 +115,7 @@ nvidia-smi pmon -s m -d 1
 nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
 ```
 
-## 5 — Persistence Mode
+## 5 - Persistence Mode
 
 Persistence mode keeps the driver loaded even when no GPU application is running. This avoids driver initialisation latency for subsequent GPU tasks.
 
@@ -130,7 +130,7 @@ sudo nvidia-smi -pm 1
 sudo nvidia-smi -pm 0
 ```
 
-## 6 — Compute Mode
+## 6 - Compute Mode
 
 Controls which processes can use the GPU.
 
@@ -149,7 +149,7 @@ sudo nvidia-smi -c 3
 sudo nvidia-smi -c 0
 ```
 
-## 7 — Clock and Power Management
+## 7 - Clock and Power Management
 
 ```bash
 # Query current clocks
@@ -168,7 +168,7 @@ sudo nvidia-smi -rgc
 sudo nvidia-smi -pl 250
 ```
 
-## 8 — XML Output
+## 8 - XML Output
 
 ```bash
 # Full XML output (all GPU details)
@@ -185,7 +185,7 @@ for gpu in root.findall('gpu'):
 "
 ```
 
-## 9 — Topology
+## 9 - Topology
 
 ```bash
 # Show GPU topology (NVLink, PCIe relationships)
